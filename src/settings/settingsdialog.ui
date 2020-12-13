@@ -386,7 +386,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="translationNotificationTimeoutLabel">
              <property name="text">
-              <string>Translation notification timeout:</string>
+              <string>Translation notification timeout (0 disables timeout):</string>
              </property>
             </widget>
            </item>
@@ -399,7 +399,7 @@
               <string> sec</string>
              </property>
              <property name="minimum">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="maximum">
               <number>60</number>
