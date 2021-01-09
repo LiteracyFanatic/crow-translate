@@ -24,11 +24,14 @@
 #include "singleapplication.h"
 #include "settings/appsettings.h"
 
+#include <signal.h>
+
 #ifdef Q_OS_LINUX
 #include <QDBusConnection>
 #include <QDBusError>
 #endif
 
+void signalHandler(int sig);
 int launchGui(int argc, char *argv[]);
 int launchCli(int argc, char *argv[]);
 
@@ -38,10 +41,26 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName(QStringLiteral(APPLICATION_NAME));
     QCoreApplication::setOrganizationName(QStringLiteral(APPLICATION_NAME));
 
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+
     if (argc == 1)
         return launchGui(argc, argv); // Launch GUI if there are no arguments
 
     return launchCli(argc, argv);
+}
+
+// Properly shutdown the application when killed so that settings are saved
+void signalHandler(int sig)
+{
+    switch (sig) {
+    case SIGINT:
+        QCoreApplication::exit(130);
+        break;
+    case SIGTERM:
+        QCoreApplication::exit(0);
+        break;
+    }
 }
 
 int launchGui(int argc, char *argv[])
